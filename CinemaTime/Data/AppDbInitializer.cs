@@ -132,12 +132,16 @@ namespace CinemaTime.Data
                     });
                     context.SaveChanges();
                 }
-                //Movies
+                
                 //Movies
                 if (!context.Movies.Any())
                 {
+                    Console.WriteLine("MOVIES SEED STARTED");
                     var cinemas = context.Cinemas.ToList();
                     var producers = context.Producers.ToList();
+
+                    Console.WriteLine($"Cinemas count: {cinemas.Count}");
+                    Console.WriteLine($"Producers count: {producers.Count}");
 
                     context.Movies.AddRange(new List<Movie>()
                 {
@@ -216,6 +220,7 @@ namespace CinemaTime.Data
                 });
 
                     context.SaveChanges();
+                    Console.WriteLine("MOVIES SEED DONE");
                 }
 
                 //Actors & Movies
