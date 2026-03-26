@@ -13,7 +13,15 @@ builder.Services.AddControllersWithViews();
 
 // DBContext Configuration
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString")));
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnectionString"),
+        sqlOptions =>
+        {
+            sqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 5,
+                maxRetryDelay: TimeSpan.FromSeconds(10),
+                errorNumbersToAdd: null);
+        }));
 
 // Service configuration
 builder.Services.AddScoped<IActorsService, ActorsService>();
@@ -34,7 +42,6 @@ builder.Services.AddAuthentication(options =>
     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 });
 
-builder.Services.AddSession();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -60,7 +67,10 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Movies}/{action=Index}/{id?}");
 
-AppDbInitializer.Seed(app);
-AppDbInitializer.SeedUserAndRolesAsync(app).Wait();
+if (app.Environment.IsDevelopment())
+{
+    AppDbInitializer.Seed(app);
+    AppDbInitializer.SeedUserAndRolesAsync(app).Wait();
+}
 
 app.Run();
