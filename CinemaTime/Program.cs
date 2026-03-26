@@ -64,20 +64,19 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Movies}/{action=Index}/{id?}");
 
-using (var scope = app.Services.CreateScope())
+await using (var scope = app.Services.CreateAsyncScope())
 {
     var services = scope.ServiceProvider;
 
     try
     {
         AppDbInitializer.Seed(app);
-        AppDbInitializer.SeedUserAndRolesAsync(app).Wait();
+        await AppDbInitializer.SeedUserAndRolesAsync(app);
     }
     catch (Exception ex)
     {
         Console.WriteLine(ex.Message);
     }
 }
-
 
 app.Run();
