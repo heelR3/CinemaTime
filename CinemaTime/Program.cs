@@ -64,10 +64,9 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Movies}/{action=Index}/{id?}");
 
-if (app.Environment.IsDevelopment())
-{
-    AppDbInitializer.Seed(app);
-    AppDbInitializer.SeedUserAndRolesAsync(app).Wait();
-}
+
+AppDbInitializer.Seed(app);
+AppDbInitializer.SeedUserAndRolesAsync(app).Wait();
+
 
 app.Run();
