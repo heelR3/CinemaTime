@@ -13,14 +13,11 @@ builder.Services.AddControllersWithViews();
 
 // DBContext Configuration
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(
+    options.UseNpgsql(
         builder.Configuration.GetConnectionString("DefaultConnectionString"),
-        sqlOptions =>
+        npgsqlOptions =>
         {
-            sqlOptions.EnableRetryOnFailure(
-                maxRetryCount: 5,
-                maxRetryDelay: TimeSpan.FromSeconds(10),
-                errorNumbersToAdd: null);
+            npgsqlOptions.EnableRetryOnFailure();
         }));
 
 // Service configuration
